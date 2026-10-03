@@ -1,4 +1,4 @@
-name: dump-publications
+name: grep-status
 on:
   workflow_dispatch:
 jobs:
@@ -6,20 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Dump config/pages
+      - name: grep statuses
         run: |
-          echo "===== _config.yml ====="
-          cat _config.yml
-          echo "===== _pages ====="
-          for f in _pages/*.md; do echo "--- $f ---"; cat "$f"; done
-      - name: Clone other repos and show READMEs
-        run: |
-          for r in llm-adaptive-learning BenchTasksCollv3 optimizing-llms-contextual-reasoning enhancing-llms ipsum-lorem-all-you-need LUFFY; do
-            echo "########## REPO: $r ##########"
-            rm -rf /tmp/repo
-            git clone --depth 1 "https://github.com/luica01209/$r.git" /tmp/repo 2>&1 | tail -2
-            echo "--- root files ---"
-            ls -la /tmp/repo
-            echo "--- README ---"
-            (cat /tmp/repo/README.md 2>/dev/null || cat /tmp/repo/README* 2>/dev/null) | head -80
-          done
+          echo "=== grep preprint/under review/accepted ==="
+          grep -rin -E "preprint|under review|accepted|codeurl" --include="*.md" --include="*.yml" . | grep -v "_posts" || true
