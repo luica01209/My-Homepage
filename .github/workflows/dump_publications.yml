@@ -1,0 +1,15 @@
+name: dump-publications
+on:
+  workflow_dispatch:
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dump publication files
+        run: |
+          for f in _publications/*.md; do
+            echo "===== FILE: $f ====="
+            cat "$f"
+            echo "===== END: $f ====="
+          done
